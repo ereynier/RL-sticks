@@ -1,0 +1,224 @@
+html, body {
+    background: rgb(115,64,158);
+    background: linear-gradient(90deg, rgb(105, 190, 190) 0%, rgb(71, 134, 173) 100%);
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 90%;
+}
+
+p {
+    color:  #F5F8FA;
+    font-size: 1.3em;
+    margin: 20px;
+}
+.input-text {
+    width: 50%;
+    height: 40px;
+    margin: 20px;
+    margin-right: 0px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 1em;
+    background-color: #243447;
+    color: #F5F8FA;
+    padding-left: 10px;
+}
+
+#table {
+    height: 80%;
+}
+
+#sticks-table {
+    height: 80%;
+    margin: 20px;
+    margin-bottom: 0px;
+    overflow: auto;
+}
+
+div.sticks-table, button {
+    width: 60px;
+    height: 80%;
+    margin: 40px;
+    margin-right: 0px;
+    border: none;
+    outline: none;
+    border-radius: 30px;
+    font-size: 1em;
+    background-color: #633f10;
+    color: #F5F8FA;
+    padding-left: 10px;
+}
+
+div.sticks-table, button:hover {
+    background-color: #a1753a;
+}
+
+.selected {
+    background-color: #a1753a;
+}
+
+.used, .used:hover {
+    background-color: #633f10a4;
+}
+
+#post-button {
+    width: 20%;
+    height: 40px;
+    margin: 20px;
+    margin-right: 0px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 1em;
+    background-color: #243447;
+    color: #F5F8FA;
+}
+#post-button:hover, #reset-button:hover {
+    background-color: #506074;
+}
+
+#reset-button {
+    width: 10%;
+    height: 50px;
+    margin: 10px;
+    margin-right: 0px;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 1em;
+    background-color: #243447;
+    color: #F5F8FA;
+}
+
+
+
+.button:disabled {
+    background-color: #353e46;
+    cursor: pointer;
+}
+
+.button__text {
+    color: #ffffff;
+    transition: all 0.2s;
+}
+
+.button--loading .button__text {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.button--loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    left: 50%;
+    border: 4px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: button-loading-spinner 1s ease infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+
+    to {
+        transform: rotate(1turn);
+    }
+}
+
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #464646dc; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 15px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 50px; /* 50px from the bottom */
+  }
+  
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 50px; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {bottom: 0; opacity: 0;}
+    to {bottom: 50px; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {bottom: 50px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {bottom: 50px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
+  }
+
+
+
+.btn-animated {
+    animation: moveInBottom 0.5s ease-out;
+}
+
+@keyframes moveInBottom {
+    0% {
+        opacity: 100;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 100;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 100;
+        transform: scale(1);
+    }
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    padding-bottom: 40px;
+    width: 100%;
+    text-align: center;
+    font-size: 0.8em;
+    color: white;
+  }
+  
+  div.footer a, a:visited, a:focus, a:active {
+      text-decoration: none;
+      color: inherit;
+  }
+  div.footer a:hover {
+      text-decoration: underline;
+      color: inherit;
+  }
+  
+  .hidden {
+      display: none;
+  }

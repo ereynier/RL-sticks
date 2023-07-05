@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Sticks Game</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    </head>
+    <body>
+        <h1>Sticks game</h1>
+        <p>There are sticks on the table.</p>
+        <p>You can take 1, 2 or 3 adjacent sticks.</p>
+        <p>If you take the last one, you lose.</p>
+        <button type="button" id="reset-button" onclick="resetTable()">
+            <span class="button__text">Reset</span>
+        </button>
+        <form method="post" id="table">
+            <div id="sticks-table">
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+                <button type="button" class="stick" onclick="selectStick(this)"></button>
+            </div>
+            <button type="submit" id="post-button">
+                <span class="button__text">Take</span>
+            </button>
+        </form>
+        <div class="footer">
+            <span>portfolio: </span><a href="http://ereynier.me" target="_blank">ereynier.me</a>
+        </div>
+        <div id="snackbar">User not found...</div>
+        
+
+    </body>
+    <script src="https://code.jquery.com/jquery-3.6.4.js"></script>
+    <script type="text/javascript">
+        var sticks = [...document.getElementsByClassName("stick")]
+        var selected_sticks = []
+        function resetTable() {
+            for (i in sticks) {
+                sticks[i].classList.remove("used")
+                sticks[i].classList.remove("selected")
+            }
+            selected_sticks = []
+        }
+        function selectStick(stick) {
+            if (stick.classList.contains("used") == false) {
+                i = sticks.indexOf(stick)
+                console.log(i)
+                if (stick.classList.contains("selected")) {
+                    var x = 0
+                    for (var j = 0; j < selected_sticks.length; j++) {
+                        if (selected_sticks[j] + 1 == i || selected_sticks[j] - 1 == i) {
+                            x += 1
+                            if (x == 2) {
+                                return
+                            }
+                    }
+                }
+                stick.classList.remove("selected")
+                selected_sticks = selected_sticks.filter(function (value, index, arr) {
+                    return value != i;
+                });
+            } else if (selected_sticks.length < 3) {
+                for (var j = 0; j < selected_sticks.length; j++) {
+                    if ((selected_sticks[j] + 1 == i || selected_sticks[j] - 1 == i)) {
+                        break
+                    } if (j == selected_sticks.length - 1) {
+                        return
+                    }
+                }
+                for (var j = 0; j < selected_sticks.length; j++) {
+                    if (selected_sticks[j] + 2 < i || selected_sticks[j] - 2 > i) {
+                        return
+                    }
+                }
+                stick.classList.add("selected")
+                selected_sticks.push(i)
+            }
+        }
+    }
+    $(document).on('submit', '#table', function (e) {
+        e.preventDefault();
+        if (selected_sticks.length <= 0) {
+            var x = document.getElementById("snackbar");
+            x.className = "show";
+            x.innerHTML = String("You must select at least 1 sticks")
+            setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+            return;
+        }
+        for (var i = 0; i < selected_sticks.length; i++) {
+            sticks[selected_sticks[i]].classList.add("used")
+            sticks[selected_sticks[i]].classList.remove("selected")
+        }
+        for (i in sticks) {
+            if (sticks[i].classList.contains("used") == false) {
+                break
+            }
+            if (i == sticks.length - 1) {
+                var x = document.getElementById("snackbar");
+                x.className = "show";
+                x.innerHTML = String("You lose!")
+                setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                return
+            }
+        }
+        selected_sticks = []
+        state = []
+        for (i in sticks) {
+            if (sticks[i].classList.contains("used")) {
+                state.push(0)
+            } else {
+                state.push(1)
+            }
+        }
+        $("#post-button").attr("disabled", true);
+        $("#post-button").addClass("button--loading")
+        $.ajax({
+            type: 'POST',
+            url: '/',
+            data: {
+                state: state
+            },
+            success: function (response) {
+                if (String(response["error"]) != "") {
+                    $("#post-button").attr("disabled", false);
+                    $("#post-button").removeClass("button--loading")
+    
+                    var x = document.getElementById("snackbar");
+                    x.className = "show";
+                    x.innerHTML = String(response["error"])
+                    setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+
+                    for (var i = 0; i < sticks.length; i++) {
+                        sticks[i].classList.remove("selected")
+                    }
+                    return;
+                }
+                var model_pos = (parseInt(response["pos"]))
+                var model_nb = (parseInt(response["nb"]))
+                $("#post-button").attr("disabled", false);
+                $("#post-button").removeClass("button--loading")
+                for (var i = 0; i < model_nb; i++) {
+                    if (sticks[model_pos + i].classList.contains("used")) {
+                        var x = document.getElementById("snackbar");
+                        x.className = "show";
+                        x.innerHTML = String("The model is cheating! You win!")
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                        for (stick of sticks) {
+                            stick.classList.add("used")
+                        }
+                        return
+                    }
+                    sticks[model_pos + i].classList.add("used")
+                }
+                for (i in sticks) {
+                    if (sticks[i].classList.contains("used") == false) {
+                        return
+                    }
+                    if (i == sticks.length - 1) {
+                        var x = document.getElementById("snackbar");
+                        x.className = "show";
+                        x.innerHTML = String("You win!")
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                    }
+                }
+            }
+        })
+    })
+    </script>
+</html>
